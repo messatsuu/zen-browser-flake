@@ -1,3 +1,5 @@
+> [!NOTE]
+> This is a fork of `github:MarceColl/zen-browser-flake` to have the newer versions of the browser available
 # Zen Browser
 
 This is a flake for the Zen browser.
