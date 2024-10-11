@@ -28,19 +28,10 @@ get_version() {
     echo "$1" | grep -oP '(?<=download/)[^/]+'
 }
 
-sri_get() {
-    sri=$(nix-prefetch-url --unpack "$1")
-    echo "$sri"
-}
-
-
 url=$(resolve_url)
-echo $url
 version=$(get_version "${url}")
-echo $version
 if [[ ${version} != "$(json_get ".version")" ]]; then
-    sri=$(sri_get "${url}")
-    echo $sri
+    sri=$(nix-prefetch-url --unpack "$url")
     json_set ".version" "${version}"
-    json_set ".hash" "${sri}"
+    json_set ".hash" "sha256:${sri}"
 fi
