@@ -18,20 +18,14 @@ json_set() {
     jq --arg x "$2" "$1 = \$x" < "./versions.json" | sponge "./versions.json"
 }
 
-resolve_url() {
-    url="https://api.github.com/repos/zen-browser/desktop/releases/latest"
-    url=$(curl $url | grep "browser_download_url.*zen.linux-specific.tar" | grep -oP '(?<="browser_download_url": ")[^"]*')
-    echo "${url}"
-}
+newest_version=$(curl -s https://api.github.com/repos/zen-browser/desktop/releases/latest | jq -r '.tag_name')
+url="https://github.com/zen-browser/desktop/releases/download/$newest_version"
 
-get_version() {
-    echo "$1" | grep -oP '(?<=download/)[^/]+'
-}
-
-url=$(resolve_url)
-version=$(get_version "${url}")
-if [[ ${version} != "$(json_get ".version")" ]]; then
-    sri=$(nix-prefetch-url --unpack "$url")
-    json_set ".version" "${version}"
+if [[ ${newest_version} != "$(json_get ".version")" ]]; then
+    sri=$(nix-prefetch-url --type sha256 --unpack $url/zen.linux-x86_64.tar.bz2)
+    json_set ".version" "${newest_version}"
     json_set ".hash" "sha256:${sri}"
+
+    nix flake update
+    nix build
 fi

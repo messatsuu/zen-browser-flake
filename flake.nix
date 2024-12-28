@@ -12,7 +12,7 @@
       versions = nixpkgs.lib.importJSON ./versions.json;
       downloadUrl = {
         "specific" = {
-          url = "https://github.com/zen-browser/desktop/releases/download/${versions.version}/zen.linux-specific.tar.bz2";
+          url = "https://github.com/zen-browser/desktop/releases/download/${versions.version}/zen.linux-x86_64.tar.bz2";
           sha256 = versions.hash;
         };
         "generic" = {
