@@ -22,7 +22,7 @@ newest_version=$(curl -s https://api.github.com/repos/zen-browser/desktop/releas
 url="https://github.com/zen-browser/desktop/releases/download/$newest_version"
 
 if [[ ${newest_version} != "$(json_get ".version")" ]]; then
-    sri=$(nix-prefetch-url --type sha256 --unpack $url/zen.linux-x86_64.tar.bz2)
+    sri=$(nix-prefetch-url --type sha256 --unpack $url/zen.linux-x86_64.tar.xz)
     json_set ".version" "${newest_version}"
     json_set ".hash" "sha256:${sri}"
 
